@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { createToken } from '@/lib/auth';
+import { createToken } from '@/lib/auth.server';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
@@ -27,16 +27,9 @@ export async function POST(request: Request) {
       role: user.role,
     });
 
-    const response = NextResponse.json({ success: true, role: user.role });
-    response.cookies.set('auth_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24, // 1 day
-    });
+    await setAuthCookie(token);
 
-    return response;
+    return NextResponse.json({ success: true, role: user.role });
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

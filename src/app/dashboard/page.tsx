@@ -1,6 +1,6 @@
 import DashboardLayout from '@/components/DashboardLayout';
 import { prisma } from '@/lib/prisma';
-import { getAuthUser } from '@/lib/auth';
+import { getAuthUser } from '@/lib/auth.server';
 import { 
   Calendar, 
   Clock, 

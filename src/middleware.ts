@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '@/lib/auth.server';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-this';
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
   const { pathname } = request.nextUrl;
 
@@ -25,18 +23,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  try {
-    const payload = jwt.verify(token, JWT_SECRET) as { role: string };
+  const payload = await verifyToken(token);
 
-    // Admin path protection
-    if (pathname.startsWith('/admin') && payload.role !== 'admin') {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-
-    return NextResponse.next();
-  } catch (error) {
+  if (!payload) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
+
+  // Admin path protection
+  if (pathname.startsWith('/admin') && payload.role !== 'admin') {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

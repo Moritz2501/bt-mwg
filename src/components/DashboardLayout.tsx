@@ -1,5 +1,5 @@
 import Sidebar from './Sidebar';
-import { getAuthUser } from '@/lib/auth';
+import { getAuthUser } from '@/lib/auth.server';
 import { redirect } from 'next/navigation';
 import { User as UserIcon, Bell } from 'lucide-react';
 
