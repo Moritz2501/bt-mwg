@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --color-primary: #6366f1; /* Indigo 500 */
+  --color-secondary: #a855f7; /* Purple 500 */
+  --color-accent: #f43f5e; /* Rose 500 */
+  --color-dark-bg: #020617; /* Slate 950 */
+  --color-sidebar: #0f172a; /* Slate 900 */
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-full transition-all duration-200 flex items-center justify-center gap-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-full transition-all duration-200 flex items-center justify-center gap-2;
+  }
+
+  .btn-outline {
+    @apply border border-slate-700 hover:bg-slate-800 text-slate-200 font-medium py-2 px-4 rounded-full transition-all duration-200 flex items-center justify-center gap-2;
+  }
+
+  .card {
+    @apply bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl;
+  }
+
+  .input {
+    @apply bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all;
+  }
+}

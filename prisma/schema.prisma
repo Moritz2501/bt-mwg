@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  username      String          @unique
+  passwordHash  String
+  role          String          @default("member") // "member" or "admin"
+  active        Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  timeEntries   TimeEntry[]
+  calendarEntries CalendarEntry[] @relation("AssignedUsers")
+  assignedBookings BookingRequest[] @relation("AssignedTo")
+}
+
+model TimeEntry {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  start     DateTime
+  end       DateTime?
+  duration  Int?      // Duration in seconds
+}
+
+model CalendarEntry {
+  id            String   @id @default(cuid())
+  title         String
+  start         DateTime
+  end           DateTime
+  location      String?
+  notes         String?
+  category      String   // e.g., "Probe", "Show", "Aufbau", "Abbau"
+  assignedUsers User[]   @relation("AssignedUsers")
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  name        String
+  start       DateTime
+  end         DateTime
+  venue       String
+  contact     String?
+  status      String    @default("geplant") // "geplant", "aktiv", "abgeschlossen"
+  notes       String?
+  checklist   EventChecklistItem[]
+  equipment   EventEquipment[]
+}
+
+model EventChecklistItem {
+  id      String  @id @default(cuid())
+  eventId String
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  area    String  // e.g., "Ton", "Licht", "Bühne", "Video", "Strom", "Sonstiges"
+  text    String
+  done    Boolean @default(false)
+}
+
+model EventEquipment {
+  id              String  @id @default(cuid())
+  eventId         String
+  event           Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  itemName        String
+  quantity        Int
+  condition       String?
+  storageLocation String?
+  reserved        Boolean @default(false)
+}
+
+model BookingRequest {
+  id                   String   @id @default(cuid())
+  requesterName        String
+  email                String
+  phone                String?
+  eventTitle           String
+  start                DateTime
+  end                  DateTime
+  location             String
+  audienceSize         Int?
+  techNeedsCategories  String   // JSON stringified array of categories
+  techNeedsText        String?
+  budget               String?
+  notes                String?
+  status               String   @default("neu") // "neu", "in Prüfung", "angenommen", "abgelehnt"
+  assignedToUserId     String?
+  assignedTo           User?    @relation("AssignedTo", fields: [assignedToUserId], references: [id])
+  createdAt            DateTime @default(now())
+  internalComments     String?  // JSON stringified array of comments
+}
