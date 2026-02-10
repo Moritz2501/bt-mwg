@@ -1,17 +1,12 @@
-
-// Diese Komponente ist eine Server Component und darf nur von anderen Server Components verwendet werden!
 import Sidebar from './Sidebar';
-import { getAuthUser } from '@/lib/auth.server';
-import { redirect } from 'next/navigation';
 import { User as UserIcon, Bell } from 'lucide-react';
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await getAuthUser();
+interface DashboardLayoutShellProps {
+  children: React.ReactNode;
+  user: { username: string; role: string };
+}
 
-  if (!user) {
-    redirect('/login');
-  }
-
+export default function DashboardLayoutShell({ children, user }: DashboardLayoutShellProps) {
   return (
     <div className="flex min-h-screen">
       <Sidebar userRole={user.role} />

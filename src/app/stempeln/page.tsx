@@ -1,6 +1,6 @@
 'use client';
 
-import DashboardLayout from '@/components/DashboardLayout';
+import DashboardLayoutShell from '@/components/DashboardLayoutShell';
 import { useState, useEffect, useCallback } from 'react';
 import { Play, Square, Clock, Calendar, History, Download, Loader2 } from 'lucide-react';
 import { format, differenceInSeconds } from 'date-fns';
@@ -81,8 +81,10 @@ export default function StempelnPage() {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Im Client stehen keine echten Userdaten zur Verfügung, ggf. später via Context/API ersetzen
+  const user = { username: 'Benutzer', role: 'user' };
   return (
-    <DashboardLayout>
+    <DashboardLayoutShell user={user}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
           <div className="card text-center py-12 flex flex-col items-center justify-center border-t-8 border-indigo-600">
@@ -175,6 +177,6 @@ export default function StempelnPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </DashboardLayoutShell>
   );
 }
