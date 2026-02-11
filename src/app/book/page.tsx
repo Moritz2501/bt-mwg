@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { 
   Music, 
   Send, 
