@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { createToken } from '@/lib/auth.server';
+import { createToken, setAuthCookie } from '@/lib/auth.server';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
